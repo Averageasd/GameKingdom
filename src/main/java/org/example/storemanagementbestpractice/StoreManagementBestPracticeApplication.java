@@ -8,6 +8,7 @@ public class StoreManagementBestPracticeApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(StoreManagementBestPracticeApplication.class, args);
+
     }
 
 }
