@@ -14,10 +14,4 @@ public class CategoryController {
     public ResponseEntity<Void> getCategories() {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
-    @GetMapping(path = "privateCategory")
-    public ResponseEntity<Void> getPrivateCategories() {
-        log.info("private categories not allowed");
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
 }

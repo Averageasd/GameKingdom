@@ -7,11 +7,13 @@ import org.example.storemanagementbestpractice.services.ProductService;
 import org.example.storemanagementbestpractice.util.GenerateErrorMessageUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
 @Slf4j
 @Controller
 public class ProductController {
@@ -28,13 +30,8 @@ public class ProductController {
     }
 
     @GetMapping(path = "product")
-    public ResponseEntity<Void> getProducts() {
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @GetMapping(path = "privateProduct")
-    public ResponseEntity<Void> getPrivateProducts() {
-        log.info("private products not allowed");
+    public ResponseEntity<Void> getProducts(Authentication authentication) {
+        log.info(authentication.getPrincipal().toString());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
