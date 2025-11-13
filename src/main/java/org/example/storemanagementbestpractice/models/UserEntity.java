@@ -1,34 +1,51 @@
 package org.example.storemanagementbestpractice.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
-@Data
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "studyAppUser")
 public class UserEntity implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "Id", insertable = false, updatable = false, nullable = false)
+    private UUID id;
+
+    @Column(nullable = false, unique = true, updatable = false)
+    @Length(min = 5, max = 255, message = "Name length must be between 5 and 255 characters")
     private String username;
+
+    @Column(nullable = false, unique = true)
+    private boolean enabled;
+
+    @Column(nullable = false)
+    @Length(min = 5, max = 255, message = "Password length must be between 5 and 255 characters")
     private String password;
-    private String role;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    public UserEntity(String username, boolean enabled, String password, String email) {
+        this.username = username;
+        this.enabled = enabled;
+        this.password = password;
+        this.email = email;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
+        return List.of();
     }
 
     @Override

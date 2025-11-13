@@ -2,7 +2,7 @@ package org.example.storemanagementbestpractice.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.example.storemanagementbestpractice.models.Product;
+import org.example.storemanagementbestpractice.models.ProductEntity;
 import org.example.storemanagementbestpractice.services.ProductService;
 import org.example.storemanagementbestpractice.util.GenerateErrorMessageUtil;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ public class ProductController {
 
     @PostMapping(path = "create/product")
     public ResponseEntity<?> saveProduct(
-            @Valid @RequestBody Product product,
+            @Valid @RequestBody ProductEntity product,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {

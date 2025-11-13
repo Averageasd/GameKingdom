@@ -1,7 +1,7 @@
 package org.example.storemanagementbestpractice.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.storemanagementbestpractice.models.Product;
+import org.example.storemanagementbestpractice.models.ProductEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -12,7 +12,7 @@ public class ProductService {
 
     private int counter = 0;
 
-    public boolean saveProductDetails(Product product) {
+    public boolean saveProductDetails(ProductEntity product) {
         boolean isSaved = true;
         log.info(product.toString());
         return isSaved;

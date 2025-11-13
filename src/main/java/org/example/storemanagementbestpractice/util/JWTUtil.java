@@ -4,23 +4,38 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JWTUtil {
-    private final String SECRET = "_g}W68P21gPwg#nzyH;u0xX:AxWwwe$mF&D;).0?xp_N])C/!DvN*AqHFax}DYx_/8f*dE-Eqq$/KRq$38;@p6RF/m_uWRN@?uwu=7[BH5TUu/,+Y!Y_eJQ{BKg9TFNhG&xF.[$NYUc{%gv}-b]$qa1#RH%82[u6Qmj@%JX=h-bbaB-3d!{*!:j$dCjdYfp#:5]wnq673m$?Pki5QCH::#AV]vX-pR8_L(r9=/DP]UZr,zn}AT0XiJT]ZTwyi3.=";
-    private final SecretKey secretKey = Keys.hmacShaKeyFor(SECRET.getBytes());
-    private final long EXPIRATION_TIME = 1000 * 60 * 60;
+
+    @Value("${jwt.secret}")
+    private String mySecretEnv;
+
+    @Value("${expiration.time}")
+    private long expirationTimeEnv;
+
+    private SecretKey secretKey;
+
+    @PostConstruct
+    public void initializeSecretKey(){
+        secretKey = Keys.hmacShaKeyFor(mySecretEnv.getBytes());
+    }
 
     public String generateToken(String username) {
+        log.info("expiriation time {}", expirationTimeEnv);
         return Jwts.builder()
-                .setSubject(username)
+                .subject(username)
                 .issuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .expiration(new Date(System.currentTimeMillis() + expirationTimeEnv))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }

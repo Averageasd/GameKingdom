@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.storemanagementbestpractice.services.CustomUserDetailsService;
 import org.example.storemanagementbestpractice.util.JWTUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,12 +18,14 @@ import java.io.IOException;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    @Autowired
-    JWTUtil jwtUtil;
+    private final JWTUtil jwtUtil;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    @Autowired
-    CustomUserDetailsService customUserDetailsService;
-    // validate JWT Token
+    public JwtAuthFilter(JWTUtil jwtUtil, CustomUserDetailsService customUserDetailsService) {
+        this.jwtUtil = jwtUtil;
+        this.customUserDetailsService = customUserDetailsService;
+    }
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -40,11 +41,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // username is validated and securityContextHolder is null we create a new one that
         // holds auth object
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
             boolean tokenIsValid = jwtUtil.validateToken(username, userDetails, token);
             if (tokenIsValid) {
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =  new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 // store auth object that will be used throughout the app requests
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

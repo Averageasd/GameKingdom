@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class Product {
+public class ProductEntity {
     private final UUID id;
 
     @NotBlank(message = "product name cannot be empty")
