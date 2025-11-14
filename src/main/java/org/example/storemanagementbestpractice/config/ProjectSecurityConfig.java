@@ -31,6 +31,7 @@ public class ProjectSecurityConfig {
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers("/auth/authenticate").permitAll()
                 .requestMatchers("/auth/register").permitAll()
+                .requestMatchers("/auth/verify").permitAll()
         );
 
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

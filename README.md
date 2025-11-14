@@ -31,4 +31,6 @@ on main Postgresql database.
 <br/>
 
 ## Tasks
-- [ ] Register users. 
+- [x] Register users. 
+- [x] Verify user registration with email token.
+- [x] only activate account once user verify their account.

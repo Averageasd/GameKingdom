@@ -17,14 +17,24 @@ public class EmailStatusEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id", nullable = false, unique = true)
-    private Long id;
+    private int id;
 
     @Column(nullable = false, unique = true)
     private String emailToken;
 
     @Column(nullable = false)
-    private boolean enabled;
+    private boolean emailVerified;
 
     @Column(nullable = false)
     private UUID userId;
+
+    public EmailStatusEntity(
+            String emailToken,
+            boolean emailVerified,
+            UUID userId
+    ) {
+        this.emailToken = emailToken;
+        this.emailVerified = emailVerified;
+        this.userId = userId;
+    }
 }
