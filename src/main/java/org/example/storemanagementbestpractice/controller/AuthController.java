@@ -59,6 +59,7 @@ public class AuthController {
             }
             UserEntity userEntity = new UserEntity(
                     signUpDTO.getUsername(),
+                    false,
                     signUpDTO.getEmail(),
                     signUpDTO.getPassword()
             );
@@ -68,6 +69,4 @@ public class AuthController {
             throw e;
         }
     }
-
-
 }

@@ -25,13 +25,13 @@ public class ProjectSecurityConfig {
     public ProjectSecurityConfig(JwtAuthFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests
-                .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/authenticate").permitAll()
-                .requestMatchers("/product").hasRole("ADMIN")
-                .requestMatchers("/category").authenticated());
+                .requestMatchers("/auth/authenticate").permitAll()
+                .requestMatchers("/auth/register").permitAll()
+        );
 
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         http.csrf(AbstractHttpConfigurer::disable).headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
