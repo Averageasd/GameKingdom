@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -26,13 +29,16 @@ public class JWTUtil {
     private SecretKey secretKey;
 
     @PostConstruct
-    public void initializeSecretKey(){
+    public void initializeSecretKey() {
         secretKey = Keys.hmacShaKeyFor(mySecretEnv.getBytes());
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, UUID userId) {
         log.info("expiriation time {}", expirationTimeEnv);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", userId);
         return Jwts.builder()
+                .claims(claims)
                 .subject(username)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationTimeEnv))
@@ -46,10 +52,15 @@ public class JWTUtil {
 
     private Claims getClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(secretKey)
+                .verifyWith(secretKey)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    public UUID extractId(String token) {
+        final Claims claims = getClaims(token);
+        return UUID.fromString(claims.get("id", String.class));
     }
 
     public boolean validateToken(String username, UserDetails userDetails, String token) {

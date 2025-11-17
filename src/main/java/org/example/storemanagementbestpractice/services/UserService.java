@@ -10,6 +10,8 @@ import org.example.storemanagementbestpractice.repository.UserDetailsRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 public class UserService {
@@ -37,10 +39,11 @@ public class UserService {
         return userEntity;
     }
 
-    public void checkUserEnabled(LoginDTO loginDTO) {
-        userDetailsRepository.checkUserEnabled(loginDTO.getUsername(), loginDTO.getPassword())
+    public UUID checkUserEnabled(LoginDTO loginDTO) {
+        UUID userId = userDetailsRepository.checkUserEnabled(loginDTO.getUsername(), loginDTO.getPassword())
                 .orElseThrow(() -> new UserAccountLockException(UserAccountLockException.USER_IS_LOCKED));
         log.info("User account is enabled");
+        return userId;
     }
 
     public void checkUserExists(SignUpDTO signUpDTO) {
@@ -50,5 +53,9 @@ public class UserService {
             log.error("User already exists");
             throw new UserAlreadyExistException(UserAlreadyExistException.USER_ALREADY_EXIST);
         }
+    }
+
+    public void checkEmailExists(SignUpDTO signUpDTO) {
+
     }
 }

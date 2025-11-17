@@ -11,12 +11,17 @@ import java.util.UUID;
 
 @Repository
 public interface UserDetailsRepository extends JpaRepository<UserEntity, UUID> {
-    Optional<UserEntity> findByUsername(String username);
 
     Optional<UserEntity> findByEmail(String email);
 
     Optional<UserEntity> findById(UUID id);
 
+    @Query(value = "SELECT * FROM studpAppUser sa WHERE sa.username = :username OR sa.email = :username", nativeQuery = true)
+    Optional<UserEntity> findByUsername(String username);
+
     @Query(value = "SELECT Id FROM studyAppUser sa WHERE sa.username = :username AND sa.enabled=TRUE", nativeQuery = true)
     Optional<UUID> checkUserEnabled(String username, String password);
+
+    @Query(value = "SELECT Id FROM studyAppUser sa WHERE sa.email = :email AND sa.Id = :id AND sa.enabled=TRUE", nativeQuery = true)
+    Optional<UUID> checkUserWithIdExistUsingEmail(String email, UUID id);
 }

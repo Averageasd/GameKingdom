@@ -2,6 +2,7 @@ package org.example.storemanagementbestpractice.controller;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.example.storemanagementbestpractice.dtos.EmailForPasswordResetDTO;
 import org.example.storemanagementbestpractice.dtos.LoginDTO;
 import org.example.storemanagementbestpractice.dtos.SignUpDTO;
 import org.example.storemanagementbestpractice.models.EmailStatusEntity;
@@ -14,17 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.el.MethodNotFoundException;
 import java.util.UUID;
 
 @Slf4j
 @RestController
 public class AuthController {
-
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final EmailTokenService emailTokenService;
@@ -55,10 +53,12 @@ public class AuthController {
                 loginDTO.getUsername(),
                 loginDTO.getPassword())
         );
-        userService.checkUserEnabled(loginDTO);
+        UUID userId = userService.checkUserEnabled(loginDTO);
         log.info("Authentication Successful");
         return ResponseEntity.status(200).body(
-                jwtUtil.generateToken(loginDTO.getUsername()
+                jwtUtil.generateToken(
+                        loginDTO.getUsername(),
+                        userId
                 ));
     }
 
@@ -76,5 +76,38 @@ public class AuthController {
     public ResponseEntity<String> verifyToken(@RequestParam String token) {
         emailService.verifyToken(token);
         return ResponseEntity.status(200).body("Token Verified");
+    }
+
+    @PostMapping("/auth/{userId}/passwordResetReq")
+    public ResponseEntity<String> requestResetPassword(
+            @RequestParam EmailForPasswordResetDTO emailForPasswordResetDTO,
+            @PathVariable UUID userId
+    ) {
+        /**
+         * TODO: check if user exists using id and email
+         * if user does not exists, throw usernotfoundexception
+         * if a reset password request already exists, tell user to check email.
+         * create new resetpassword request with token and requestStatus set to disabled
+         * send reset password email with embedded token.
+         */
+
+        throw new MethodNotFoundException();
+    }
+
+    @PostMapping("/auth/{userId}/resetPassword")
+    public ResponseEntity<String> resetPassword(
+            @RequestParam EmailForPasswordResetDTO emailForPasswordResetDTO,
+            @PathVariable UUID userId,
+            @RequestParam String token
+    ) {
+        /**
+         * TODO: check if user exists using id and email
+         * if user does not exists, throw usernotfoundexception
+         * find passwordreset request with token
+         * token exists => activate passwordreset request, update password and
+         * delete the request.
+         */
+
+        throw new MethodNotFoundException();
     }
 }
