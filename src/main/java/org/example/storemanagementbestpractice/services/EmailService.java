@@ -5,9 +5,10 @@ import io.mailtrap.config.MailtrapConfig;
 import io.mailtrap.factory.MailtrapClientFactory;
 import io.mailtrap.model.request.emails.Address;
 import io.mailtrap.model.request.emails.MailtrapMail;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.example.storemanagementbestpractice.exceptions.EmailTokenNotFoundException;
+import org.example.storemanagementbestpractice.exceptions.UserNotFoundException;
 import org.example.storemanagementbestpractice.models.EmailStatusEntity;
 import org.example.storemanagementbestpractice.models.UserEntity;
 import org.example.storemanagementbestpractice.repository.EmailStatusRepository;
@@ -40,7 +41,6 @@ public class EmailService {
                 <br/>
                 Thanks for registering. Please verify your email by using the following token:
                 <p>%s</p><br/>
-                This link will expire in 24 hours.<br><br>
                 Cheers,<br>
                 StudyApp
                 """.formatted(mailTrapToken);
@@ -52,7 +52,7 @@ public class EmailService {
         final MailtrapClient client = MailtrapClientFactory.createMailtrapClient(config);
 
         final MailtrapMail mail = MailtrapMail.builder()
-                .from(new Address("app@demomailtrap.co", "Mailtrap Test"))
+                .from(new Address("app@studyapp.work", "Mailtrap Test"))
                 .to(List.of(new Address(email)))
                 .subject(subject)
                 .html(content)
@@ -70,11 +70,12 @@ public class EmailService {
     @Transactional(rollbackOn = Exception.class)
     public void verifyToken(String token) {
         EmailStatusEntity emailStatusEntity = emailStatusRepository.findByEmailToken(token)
-                .orElseThrow(() -> new EntityNotFoundException("email token not found"));
+                .orElseThrow(() -> new EmailTokenNotFoundException(EmailTokenNotFoundException.EMAIL_TOKEN_NOT_FOUND));
         UserEntity userEntity = userDetailsRepository.findById(emailStatusEntity.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("user not found"));
+                .orElseThrow(() -> new UserNotFoundException(UserNotFoundException.USER_NOT_FOUND));
         emailStatusRepository.delete(emailStatusEntity);
         userEntity.setEnabled(true);
         userDetailsRepository.save(userEntity);
+        log.info("token verified");
     }
 }

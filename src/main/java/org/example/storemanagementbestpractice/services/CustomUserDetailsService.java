@@ -1,14 +1,11 @@
 package org.example.storemanagementbestpractice.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.storemanagementbestpractice.dtos.SignUpDTO;
-import org.example.storemanagementbestpractice.models.UserEntity;
 import org.example.storemanagementbestpractice.repository.UserDetailsRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -26,6 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("Loading UserDetails for {}", username);
         return userDetailsRepository.findByUsername(username)
                 .orElseThrow(
                         () -> new UsernameNotFoundException("Username not found")

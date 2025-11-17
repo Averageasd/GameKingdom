@@ -1,10 +1,7 @@
 package org.example.storemanagementbestpractice.dtos;
 
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 @Data
