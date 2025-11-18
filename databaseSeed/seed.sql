@@ -18,3 +18,7 @@ CREATE TABLE IF NOT EXISTS studyAppEmailStatus (
     userId UUID NOT NULL,
     CONSTRAINT userIdFk FOREIGN KEY(userId) REFERENCES studyAppUser(Id) ON DELETE CASCADE
 );
+
+INSERT INTO studyAppUser (username, email, enabled, password)
+VALUES
+('testuser', 'testemail@gmail.com', true, '1222223')
