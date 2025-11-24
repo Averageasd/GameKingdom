@@ -71,7 +71,7 @@ public class EmailService {
     public void verifyToken(String token) {
         EmailStatusEntity emailStatusEntity = emailStatusRepository.findByEmailToken(token)
                 .orElseThrow(() -> new EmailTokenNotFoundException(EmailTokenNotFoundException.EMAIL_TOKEN_NOT_FOUND));
-        UserEntity userEntity = userDetailsRepository.findById(emailStatusEntity.getUserId())
+        UserEntity userEntity = emailStatusRepository.findByUserId(emailStatusEntity.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(UserNotFoundException.USER_NOT_FOUND));
         emailStatusRepository.delete(emailStatusEntity);
         userEntity.setEnabled(true);

@@ -1,10 +1,12 @@
 package org.example.storemanagementbestpractice.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.storemanagementbestpractice.dtos.EmailForPasswordResetDTO;
 import org.example.storemanagementbestpractice.dtos.LoginDTO;
 import org.example.storemanagementbestpractice.dtos.SignUpDTO;
 import org.example.storemanagementbestpractice.exceptions.UserAccountLockException;
 import org.example.storemanagementbestpractice.exceptions.UserAlreadyExistException;
+import org.example.storemanagementbestpractice.exceptions.UserNotFoundException;
 import org.example.storemanagementbestpractice.models.UserEntity;
 import org.example.storemanagementbestpractice.repository.UserDetailsRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,7 +42,7 @@ public class UserService {
     }
 
     public UUID checkUserEnabled(LoginDTO loginDTO) {
-        UUID userId = userDetailsRepository.checkUserEnabled(loginDTO.getUsername(), loginDTO.getPassword())
+        UUID userId = userDetailsRepository.checkUserEnabled(loginDTO.getUsername())
                 .orElseThrow(() -> new UserAccountLockException(UserAccountLockException.USER_IS_LOCKED));
         log.info("User account is enabled");
         return userId;
@@ -55,7 +57,14 @@ public class UserService {
         }
     }
 
-    public void checkEmailExists(SignUpDTO signUpDTO) {
+    public void checkUserWithIdExistUsingEmail(EmailForPasswordResetDTO emailForPasswordResetDTO, UUID userId) {
+        userDetailsRepository.checkUserWithIdExistUsingEmail(emailForPasswordResetDTO.getEmail(), userId)
+                .orElseThrow(() -> new UserNotFoundException(UserNotFoundException.USER_NOT_FOUND));
+        log.info("User account with id {} exists. email of user is {}", userId, emailForPasswordResetDTO.getEmail());
+    }
 
+    public void updateUserPassword(EmailForPasswordResetDTO emailForPasswordResetDTO, UUID userId) {
+        userDetailsRepository.updateUserPassword(passwordEncoder.encode(emailForPasswordResetDTO.getPassword()), userId);
+        log.info("Password updated successfully for user with id {}", userId);
     }
 }

@@ -69,7 +69,7 @@ public class AuthController {
         UserEntity userEntity = userService.createUser(signUpDTO);
         EmailStatusEntity emailStatusEntity = emailTokenService.createToken(userEntity);
         emailService.sendEmail(emailStatusEntity.getEmailToken(), userEntity.getEmail());
-        return ResponseEntity.status(200).body("Registered successfully");
+        return ResponseEntity.status(201).body("Registered successfully");
     }
 
     @PostMapping("/auth/verify")
@@ -78,36 +78,14 @@ public class AuthController {
         return ResponseEntity.status(200).body("Token Verified");
     }
 
-    @PostMapping("/auth/{userId}/passwordResetReq")
-    public ResponseEntity<String> requestResetPassword(
-            @RequestParam EmailForPasswordResetDTO emailForPasswordResetDTO,
-            @PathVariable UUID userId
-    ) {
-        /**
-         * TODO: check if user exists using id and email
-         * if user does not exists, throw usernotfoundexception
-         * if a reset password request already exists, tell user to check email.
-         * create new resetpassword request with token and requestStatus set to disabled
-         * send reset password email with embedded token.
-         */
-
-        throw new MethodNotFoundException();
-    }
-
+    @Transactional(rollbackOn = Exception.class)
     @PostMapping("/auth/{userId}/resetPassword")
     public ResponseEntity<String> resetPassword(
-            @RequestParam EmailForPasswordResetDTO emailForPasswordResetDTO,
-            @PathVariable UUID userId,
-            @RequestParam String token
+            @Validated @RequestBody EmailForPasswordResetDTO emailForPasswordResetDTO,
+            @PathVariable UUID userId
     ) {
-        /**
-         * TODO: check if user exists using id and email
-         * if user does not exists, throw usernotfoundexception
-         * find passwordreset request with token
-         * token exists => activate passwordreset request, update password and
-         * delete the request.
-         */
-
-        throw new MethodNotFoundException();
+        userService.checkUserWithIdExistUsingEmail(emailForPasswordResetDTO, userId);
+        userService.updateUserPassword(emailForPasswordResetDTO,userId);
+        return ResponseEntity.status(200).body("Password reset successfully");
     }
 }

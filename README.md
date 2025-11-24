@@ -34,4 +34,5 @@ on main Postgresql database.
 - [x] Register users. 
 - [x] Verify user registration with email token.
 - [x] only activate account once user verify their account.
-- [ ] Refactor code. create handler for exceptions. reference only services inside controllers. 
+- [x] Refactor code. create handler for exceptions. reference only services inside controllers. 
+- [x] Implemented password reset logic.

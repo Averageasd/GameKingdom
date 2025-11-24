@@ -1,5 +1,6 @@
 package org.example.storemanagementbestpractice.dtos;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -12,6 +13,7 @@ public class SignUpDTO {
     private final String username;
 
     @NotNull
+    @Email(message = "Email is not valid")
     private final String email;
 
     @NotNull
