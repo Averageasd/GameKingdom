@@ -31,3 +31,4 @@ CREATE TABLE IF NOT EXISTS gameSession (
 INSERT INTO studyAppUser (username, email, accountEnabled, password)
 VALUES
 ('testuser', 'testemail@gmail.com', true, '1222223');
+

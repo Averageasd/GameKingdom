@@ -34,4 +34,11 @@ public class GameSessionEntity {
 
     @Column(nullable = false)
     private UUID userId;
+
+    public GameSessionEntity(String sessionName, String gameStatus, String gameType, UUID userId) {
+        this.sessionName = sessionName;
+        this.gameStatus = gameStatus;
+        this.gameType = gameType;
+        this.userId = userId;
+    }
 }
