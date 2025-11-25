@@ -20,14 +20,14 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class EmailService {
+public class UserRegistrationEmailService {
 
     @Value("${mail.token}")
     private String mailServiceToken;
     private final EmailStatusRepository emailStatusRepository;
     private final UserDetailsRepository userDetailsRepository;
 
-    public EmailService(EmailStatusRepository emailStatusRepository, UserDetailsRepository userDetailsRepository) {
+    public UserRegistrationEmailService(EmailStatusRepository emailStatusRepository, UserDetailsRepository userDetailsRepository) {
         this.emailStatusRepository = emailStatusRepository;
         this.userDetailsRepository = userDetailsRepository;
     }

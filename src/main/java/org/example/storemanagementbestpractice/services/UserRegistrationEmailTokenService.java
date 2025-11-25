@@ -10,11 +10,11 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-public class EmailTokenService {
+public class UserRegistrationEmailTokenService {
 
     private final EmailStatusRepository emailStatusRepository;
 
-    public EmailTokenService(EmailStatusRepository emailStatusRepository) {
+    public UserRegistrationEmailTokenService(EmailStatusRepository emailStatusRepository) {
         this.emailStatusRepository = emailStatusRepository;
     }
 

@@ -7,8 +7,8 @@ import org.example.storemanagementbestpractice.dtos.LoginDTO;
 import org.example.storemanagementbestpractice.dtos.SignUpDTO;
 import org.example.storemanagementbestpractice.models.EmailStatusEntity;
 import org.example.storemanagementbestpractice.models.UserEntity;
-import org.example.storemanagementbestpractice.services.EmailService;
-import org.example.storemanagementbestpractice.services.EmailTokenService;
+import org.example.storemanagementbestpractice.services.UserRegistrationEmailService;
+import org.example.storemanagementbestpractice.services.UserRegistrationEmailTokenService;
 import org.example.storemanagementbestpractice.services.UserService;
 import org.example.storemanagementbestpractice.util.JWTUtil;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.el.MethodNotFoundException;
 import java.util.UUID;
 
 @Slf4j
@@ -25,22 +24,22 @@ import java.util.UUID;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
-    private final EmailTokenService emailTokenService;
+    private final UserRegistrationEmailTokenService userRegistrationEmailTokenService;
     private final JWTUtil jwtUtil;
-    private final EmailService emailService;
+    private final UserRegistrationEmailService userRegistrationEmailService;
 
     public AuthController(
             AuthenticationManager authenticationManager,
             UserService userService,
-            EmailTokenService emailTokenService,
+            UserRegistrationEmailTokenService userRegistrationEmailTokenService,
             JWTUtil jwtUtil,
-            EmailService emailService
+            UserRegistrationEmailService userRegistrationEmailService
     ) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
-        this.emailTokenService = emailTokenService;
+        this.userRegistrationEmailTokenService = userRegistrationEmailTokenService;
         this.jwtUtil = jwtUtil;
-        this.emailService = emailService;
+        this.userRegistrationEmailService = userRegistrationEmailService;
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -67,14 +66,14 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Validated @RequestBody SignUpDTO signUpDTO) {
         userService.checkUserExists(signUpDTO);
         UserEntity userEntity = userService.createUser(signUpDTO);
-        EmailStatusEntity emailStatusEntity = emailTokenService.createToken(userEntity);
-        emailService.sendEmail(emailStatusEntity.getEmailToken(), userEntity.getEmail());
+        EmailStatusEntity emailStatusEntity = userRegistrationEmailTokenService.createToken(userEntity);
+        userRegistrationEmailService.sendEmail(emailStatusEntity.getEmailToken(), userEntity.getEmail());
         return ResponseEntity.status(201).body("Registered successfully");
     }
 
     @PostMapping("/auth/verify")
     public ResponseEntity<String> verifyToken(@RequestParam String token) {
-        emailService.verifyToken(token);
+        userRegistrationEmailService.verifyToken(token);
         return ResponseEntity.status(200).body("Token Verified");
     }
 
