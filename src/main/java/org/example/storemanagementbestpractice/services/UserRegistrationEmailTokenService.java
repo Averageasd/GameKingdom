@@ -2,10 +2,10 @@ package org.example.storemanagementbestpractice.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.storemanagementbestpractice.models.EmailStatusEntity;
-import org.example.storemanagementbestpractice.models.UserEntity;
 import org.example.storemanagementbestpractice.repository.EmailStatusRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -18,13 +18,17 @@ public class UserRegistrationEmailTokenService {
         this.emailStatusRepository = emailStatusRepository;
     }
 
-    public EmailStatusEntity createToken(UserEntity user) {
+    public EmailStatusEntity createOrUpdateToken(UUID userId) {
         String token = UUID.randomUUID().toString();
-        EmailStatusEntity emailStatusEntity = new EmailStatusEntity(
+        EmailStatusEntity emailStatusEntity = new EmailStatusEntity();
+        Optional<EmailStatusEntity> emailStatusEntityOptional = emailStatusRepository.findEmailTokenByUserId(userId);
+        emailStatusEntity = emailStatusEntityOptional.orElse(new EmailStatusEntity(
                 token,
                 false,
-                user.getId()
-        );
+                userId
+        ));
+
+        emailStatusEntity.setEmailToken(token);
         emailStatusRepository.save(emailStatusEntity);
         log.info("registration token created");
         return emailStatusEntity;

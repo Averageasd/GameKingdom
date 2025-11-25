@@ -14,6 +14,7 @@ import org.example.storemanagementbestpractice.models.UserEntity;
 import org.example.storemanagementbestpractice.repository.EmailStatusRepository;
 import org.example.storemanagementbestpractice.repository.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,12 +70,16 @@ public class UserRegistrationEmailService {
 
     @Transactional(rollbackOn = Exception.class)
     public void verifyToken(String token) {
+
+        // check if email token and user with id extracted from token exist
         EmailStatusEntity emailStatusEntity = emailStatusRepository.findByEmailToken(token)
                 .orElseThrow(() -> new EmailTokenNotFoundException(EmailTokenNotFoundException.EMAIL_TOKEN_NOT_FOUND));
-        UserEntity userEntity = emailStatusRepository.findByUserId(emailStatusEntity.getUserId())
+        UserEntity userEntity = userDetailsRepository.findByUserId(emailStatusEntity.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(UserNotFoundException.USER_NOT_FOUND));
+
+        // if exists, delete token and activate account
         emailStatusRepository.delete(emailStatusEntity);
-        userEntity.setEnabled(true);
+        userEntity.setAccountEnabled(true);
         userDetailsRepository.save(userEntity);
         log.info("token verified");
     }

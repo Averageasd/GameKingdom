@@ -2,9 +2,7 @@ package org.example.storemanagementbestpractice.controller;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.storemanagementbestpractice.dtos.EmailForPasswordResetDTO;
-import org.example.storemanagementbestpractice.dtos.LoginDTO;
-import org.example.storemanagementbestpractice.dtos.SignUpDTO;
+import org.example.storemanagementbestpractice.dtos.*;
 import org.example.storemanagementbestpractice.models.EmailStatusEntity;
 import org.example.storemanagementbestpractice.models.UserEntity;
 import org.example.storemanagementbestpractice.services.UserRegistrationEmailService;
@@ -52,8 +50,12 @@ public class AuthController {
                 loginDTO.getUsername(),
                 loginDTO.getPassword())
         );
-        UUID userId = userService.checkUserEnabled(loginDTO);
+
+        // get id of enabled user using username. if user is not enabled, throw exception and stop
+        UUID userId = userService.checkUserEnabledByUsername(loginDTO.getUsername());
         log.info("Authentication Successful");
+
+        // return authenticated token with username and userid
         return ResponseEntity.status(200).body(
                 jwtUtil.generateToken(
                         loginDTO.getUsername(),
@@ -63,28 +65,75 @@ public class AuthController {
 
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/auth/register")
-    public ResponseEntity<?> registerUser(@Validated @RequestBody SignUpDTO signUpDTO) {
-        userService.checkUserExists(signUpDTO);
+    public ResponseEntity<String> registerUser(@Validated @RequestBody SignUpDTO signUpDTO) {
+
+        // check user exist using username and email. if user with username or email is already in system, throw exception
+        userService.checkUserExists(
+                signUpDTO.getUsername(),
+                signUpDTO.getEmail()
+        );
+
+        // create new user with email
         UserEntity userEntity = userService.createUser(signUpDTO);
-        EmailStatusEntity emailStatusEntity = userRegistrationEmailTokenService.createToken(userEntity);
+
+        // create token
+        EmailStatusEntity emailStatusEntity = userRegistrationEmailTokenService.createOrUpdateToken(userEntity.getId());
+
+        // send token
+        userRegistrationEmailService.sendEmail(emailStatusEntity.getEmailToken(), signUpDTO.getEmail());
+        return ResponseEntity.status(201).body("Registered successfully. Please check your email for verification token");
+    }
+
+    // add email for account verification
+    @Transactional(rollbackOn = Exception.class)
+    @PostMapping("/auth/askForVerificationCode")
+    public ResponseEntity<String> updateOrAddEmailForVerification(
+            @Validated @RequestBody CredentialsForEmailVerificationDTO credentialsForEmailVerificationDTO
+    ) {
+        UserEntity userEntity = userService.getLockedUserWithUsernameAndPassword(
+                credentialsForEmailVerificationDTO.getUsername(),
+                credentialsForEmailVerificationDTO.getPassword());
+
+        // pass userid to create/update token
+        EmailStatusEntity emailStatusEntity = userRegistrationEmailTokenService.createOrUpdateToken(userEntity.getId());
+
+        // email token
         userRegistrationEmailService.sendEmail(emailStatusEntity.getEmailToken(), userEntity.getEmail());
-        return ResponseEntity.status(201).body("Registered successfully");
+        return ResponseEntity.status(200).body("Please check your email for verification token");
     }
 
     @PostMapping("/auth/verify")
     public ResponseEntity<String> verifyToken(@RequestParam String token) {
+        // verify token to activate account
         userRegistrationEmailService.verifyToken(token);
         return ResponseEntity.status(200).body("Token Verified");
     }
 
     @Transactional(rollbackOn = Exception.class)
-    @PostMapping("/auth/{userId}/resetPassword")
+    @PutMapping("/auth/{userId}/resetPassword")
     public ResponseEntity<String> resetPassword(
-            @Validated @RequestBody EmailForPasswordResetDTO emailForPasswordResetDTO,
+            @Validated @RequestBody PasswordResetDTO passwordResetDTO,
             @PathVariable UUID userId
     ) {
-        userService.checkUserWithIdExistUsingEmail(emailForPasswordResetDTO, userId);
-        userService.updateUserPassword(emailForPasswordResetDTO,userId);
+
+        // update password given user email.
+        // we don't use userid here because we have to make sure user can reset password
+        // even before they are authenticated.
+        userService.updateUserPassword(passwordResetDTO, userId);
         return ResponseEntity.status(200).body("Password reset successfully");
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    @PutMapping("/auth/{userId}/updateEmail")
+    public ResponseEntity<String> updateEmail(
+            @Validated @RequestBody UpdateEmailDTO updateEmailDTO,
+            @PathVariable UUID userId
+    ) {
+        // check if email already exists
+        userService.checkEmailExists(updateEmailDTO.getEmail());
+
+        // update email for user with current id
+        userService.updateUserEmail(userId, updateEmailDTO.getEmail());
+        return ResponseEntity.status(200).body("Email updated successfully");
     }
 }

@@ -6,15 +6,10 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 @Data
-public class SignUpDTO {
-
+public class CredentialsForEmailVerificationDTO {
     @NotNull
     @Length(min = 5, max = 255, message = "Name length must be between 5 and 255 characters")
     private final String username;
-
-    @NotNull
-    @Email
-    private final String email;
 
     @NotNull
     @Length(min = 5, max = 255, message = "Password length must be between 5 and 255 characters")

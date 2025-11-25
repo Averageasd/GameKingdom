@@ -12,18 +12,26 @@ import java.util.UUID;
 @Repository
 public interface UserDetailsRepository extends JpaRepository<UserEntity, UUID> {
 
-    Optional<UserEntity> findByEmail(String email);
+    @Query(value = "SELECT Id FROM studyAppUser sa WHERE sa.email = :email", nativeQuery = true)
+    Optional<UUID> findByEmail(String email);
 
     @Query(value = "SELECT * FROM studyAppUser sa WHERE sa.username = :username", nativeQuery = true)
     Optional<UserEntity> findByUsername(String username);
 
-    @Query(value = "SELECT Id FROM studyAppUser sa WHERE (sa.username = :username OR sa.email =:username) AND sa.enabled=TRUE", nativeQuery = true)
-    Optional<UUID> checkUserEnabled(String username);
+    @Query(value = "SELECT Id FROM studyAppUser sa WHERE sa.username = :username AND sa.accountEnabled=TRUE", nativeQuery = true)
+    Optional<UUID> checkUserEnabledByUsername(String username);
 
-    @Query(value = "SELECT Id FROM studyAppUser sa WHERE sa.email = :email AND sa.Id = :id AND sa.enabled=TRUE", nativeQuery = true)
-    Optional<UUID> checkUserWithIdExistUsingEmail(String email, UUID id);
+    @Query(value = "SELECT * FROM studyAppUser sa WHERE sa.username = :username", nativeQuery = true)
+    Optional<UserEntity> getUserWithUsername(String username);
 
     @Modifying
-    @Query(value = "UPDATE studyAppUser SET password = :newPassword WHERE Id = :userId", nativeQuery = true)
-    void updateUserPassword(String newPassword, UUID userId);
+    @Query(value = "UPDATE studyAppUser SET password = :newPassword WHERE Id = :userId AND accountEnabled=TRUE", nativeQuery = true)
+    Optional<Void> updateUserPassword(String newPassword, UUID userId);
+
+    @Modifying
+    @Query(value = "UPDATE studyAppUser SET email = :newEmail WHERE Id = :userId", nativeQuery = true)
+    Optional<Void> updateEmail(UUID userId, String newEmail);
+
+    @Query(value = "SELECT * FROM studyAppUser sa WHERE sa.Id = :userId", nativeQuery = true)
+    Optional<UserEntity> findByUserId(UUID userId);
 }

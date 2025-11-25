@@ -1,7 +1,6 @@
 package org.example.storemanagementbestpractice.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,19 +27,18 @@ public class UserEntity implements UserDetails {
     private String username;
 
     @Column(nullable = false, unique = true)
-    private boolean enabled;
+    private boolean accountEnabled;
 
     @Column(nullable = false)
     @Length(min = 5, max = 255, message = "Password length must be between 5 and 255 characters")
     private String password;
 
-    @Column(nullable = false, unique = true)
-    @Email(message = "Email is not valid")
+    @Column(unique = true)
     private String email;
 
     public UserEntity(String username, boolean enabled, String password, String email) {
         this.username = username;
-        this.enabled = enabled;
+        this.accountEnabled = enabled;
         this.password = password;
         this.email = email;
     }

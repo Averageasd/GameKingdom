@@ -1,13 +1,13 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-DROP TABLE IF EXISTS studyAppUser;
-DROP TABLE IF EXISTS studyAppEmailStatus;
+-- DROP TABLE IF EXISTS studyAppUser;
+-- DROP TABLE IF EXISTS studyAppEmailStatus;
 
 CREATE TABLE IF NOT EXISTS studyAppUser (
     Id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
-    enabled BOOLEAN DEFAULT FALSE,
+    accountEnabled BOOLEAN DEFAULT FALSE,
     password TEXT NOT NULL
 );
 
@@ -19,6 +19,15 @@ CREATE TABLE IF NOT EXISTS studyAppEmailStatus (
     CONSTRAINT userIdFk FOREIGN KEY(userId) REFERENCES studyAppUser(Id) ON DELETE CASCADE
 );
 
-INSERT INTO studyAppUser (username, email, enabled, password)
+CREATE TABLE IF NOT EXISTS gameSession (
+    Id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    sessionName VARCHAR(255) NOT NULL,
+    gameStatus VARCHAR(255) NOT NULL,
+    gameType VARCHAR(255) NOT NULL,
+    userId UUID NOT NULL,
+    CONSTRAINT userIdFk FOREIGN KEY(userId) REFERENCES studyAppUser(Id) ON DELETE CASCADE
+);
+
+INSERT INTO studyAppUser (username, email, accountEnabled, password)
 VALUES
-('testuser', 'testemail@gmail.com', true, '1222223')
+('testuser', 'testemail@gmail.com', true, '1222223');
