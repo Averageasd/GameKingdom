@@ -87,7 +87,7 @@ public class AuthController {
     // add email for account verification
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/auth/askForVerificationCode")
-    public ResponseEntity<String> updateOrAddEmailForVerification(
+    public ResponseEntity<String> askForNewVerificationCode(
             @Validated @RequestBody CredentialsForEmailVerificationDTO credentialsForEmailVerificationDTO
     ) {
         UserEntity userEntity = userService.getLockedUserWithUsernameAndPassword(

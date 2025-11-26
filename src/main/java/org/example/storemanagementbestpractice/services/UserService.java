@@ -45,15 +45,24 @@ public class UserService {
         return userId;
     }
 
-    public UserEntity getLockedUserWithUsernameAndPassword(String username, String password) {
-        UserEntity userEntity = userDetailsRepository.getUserWithUsername(
+    public UserEntity getUser(String username, String password) {
+        UserEntity userEntity = userDetailsRepository.findByUsername(
                         username
                 )
                 .orElseThrow(() -> new UserNotFoundException(UserNotFoundException.USER_NOT_FOUND));
         if (!passwordEncoder.matches(password, userEntity.getPassword())) {
             throw new UserNotFoundException(UserNotFoundException.USER_NOT_FOUND);
         }
-        if (userEntity.isAccountEnabled()) {
+        return userEntity;
+    }
+
+    public boolean isAccountEnabled(UserEntity userEntity) {
+        return userEntity.isAccountEnabled();
+    }
+
+    public UserEntity getLockedUserWithUsernameAndPassword(String username, String password) {
+        UserEntity userEntity = getUser(username, password);
+        if (isAccountEnabled(userEntity)) {
             throw new AccountAlreadyVerifiedException(AccountAlreadyVerifiedException.ACCOUNT_ALREADY_VERIFIED);
         }
         return userEntity;

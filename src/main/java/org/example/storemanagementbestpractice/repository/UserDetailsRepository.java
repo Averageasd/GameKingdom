@@ -21,9 +21,6 @@ public interface UserDetailsRepository extends JpaRepository<UserEntity, UUID> {
     @Query(value = "SELECT Id FROM studyAppUser sa WHERE sa.username = :username AND sa.accountEnabled=TRUE", nativeQuery = true)
     Optional<UUID> checkUserEnabledByUsername(String username);
 
-    @Query(value = "SELECT * FROM studyAppUser sa WHERE sa.username = :username", nativeQuery = true)
-    Optional<UserEntity> getUserWithUsername(String username);
-
     @Modifying
     @Query(value = "UPDATE studyAppUser SET password = :newPassword WHERE Id = :userId AND accountEnabled=TRUE", nativeQuery = true)
     Optional<Void> updateUserPassword(String newPassword, UUID userId);

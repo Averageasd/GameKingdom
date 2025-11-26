@@ -14,7 +14,6 @@ import org.example.storemanagementbestpractice.models.UserEntity;
 import org.example.storemanagementbestpractice.repository.EmailStatusRepository;
 import org.example.storemanagementbestpractice.repository.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -79,6 +78,8 @@ public class UserRegistrationEmailService {
 
         // if exists, delete token and activate account
         emailStatusRepository.delete(emailStatusEntity);
+
+        // activate account
         userEntity.setAccountEnabled(true);
         userDetailsRepository.save(userEntity);
         log.info("token verified");
