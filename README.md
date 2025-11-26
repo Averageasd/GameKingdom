@@ -35,5 +35,5 @@ on main Postgresql database.
 - [x] Verify user registration with email token.
 - [x] only activate account once user verify their account.
 - [x] Refactor code. create handler for exceptions. reference only services inside controllers. 
-- [x] Implement password reset logic.
-- [ ] Implement logic that allows user to set a valid email for registration if they accidentally enter an invalid one.
+- [x] Implement password reset logic for authenticated users.
+- [x] Implement logic that allows authenticated users to reset email.
