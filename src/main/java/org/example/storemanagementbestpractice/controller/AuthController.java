@@ -88,11 +88,11 @@ public class AuthController {
     @Transactional(rollbackOn = Exception.class)
     @PostMapping("/auth/askForVerificationCode")
     public ResponseEntity<String> askForNewVerificationCode(
-            @Validated @RequestBody CredentialsForEmailVerificationDTO credentialsForEmailVerificationDTO
+            @Validated @RequestBody LoginDTO loginDTO
     ) {
         UserEntity userEntity = userService.getLockedUserWithUsernameAndPassword(
-                credentialsForEmailVerificationDTO.getUsername(),
-                credentialsForEmailVerificationDTO.getPassword());
+                loginDTO.getUsername(),
+                loginDTO.getPassword());
 
         // pass userid to create/update token
         EmailStatusEntity emailStatusEntity = userRegistrationEmailTokenService.createOrUpdateToken(userEntity.getId());
