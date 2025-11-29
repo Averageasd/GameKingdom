@@ -32,7 +32,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     private void seedDatabase() {
         // Create and save user entities
-        Optional<UserEntity> userEntityOptional = userRepository.getUserWithUsername("testuser");
+        Optional<UserEntity> userEntityOptional = userRepository.findByUsername("testuser");
         UserEntity userEntity1 = userEntityOptional.get();
         List<GameSessionEntity> gameSessionEntityList = new ArrayList<>();
         for (int i = 0; i<10;i++){
