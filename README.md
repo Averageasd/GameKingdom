@@ -1,10 +1,8 @@
 # Study App
 
 ## About
-Java spring boot app that allows users to create 
-study sessions, verify user registration by email, 
-upload study flashcards in bulk, create exams, track user focus, and potentially
-use AI/ML services to improve knowledge retention.
+Java spring boot backend for a game application where user can choose which game to play
+from several different games, see scores, game history, game analyzer and more. 
 
 ## Technologies:
 **Spring Security**: User registration, email confirmation, user login.
@@ -16,18 +14,11 @@ table
 <br/>
 **Spring Batch**: Perform bach jobs, process large volume of data, insert data into database.
 <br/>
-**Redis**: Cache data that rarely changes, improve throughput.
-<br/>
-**AWS Kinesis Data Stream**: Ingest user clicks, interactions with the app.
-<br/>
-**Postgresql**: persist user-related data.
-<br/>
-**DynamoDB**: Persist users clicks and interactions used for ranking purposes. Reduce write/read load
-on main Postgresql database.
+**Postgresql**: persist user-related data such as profile, game history, game state as json.
 <br/>
 **Athena**: Perform sql queries on DynamoDB.
 <br/>
-**Docker**: Containerize app. Used to create test db in dev env.
+**Docker**: Containerize app. Used to create test db container and other services such as message queue.
 <br/>
 
 ## Tasks
