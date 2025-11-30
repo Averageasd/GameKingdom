@@ -103,9 +103,11 @@ public class AuthController {
     }
 
     @PostMapping("/auth/verify")
-    public ResponseEntity<String> verifyToken(@RequestParam String token) {
+    public ResponseEntity<String> verifyToken(
+            @Validated @RequestBody LoginDTO loginDTO,
+            @RequestParam String token) {
         // verify token to activate account
-        userRegistrationEmailService.verifyToken(token);
+        userRegistrationEmailService.verifyToken(loginDTO, token);
         return ResponseEntity.status(200).body("Token Verified");
     }
 

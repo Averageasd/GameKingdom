@@ -7,7 +7,9 @@ import io.mailtrap.model.request.emails.Address;
 import io.mailtrap.model.request.emails.MailtrapMail;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.example.storemanagementbestpractice.dtos.LoginDTO;
 import org.example.storemanagementbestpractice.exceptions.EmailTokenNotFoundException;
+import org.example.storemanagementbestpractice.exceptions.TokenNotAssociatedWithAccountException;
 import org.example.storemanagementbestpractice.exceptions.UserNotFoundException;
 import org.example.storemanagementbestpractice.models.EmailStatusEntity;
 import org.example.storemanagementbestpractice.models.UserEntity;
@@ -68,7 +70,7 @@ public class UserRegistrationEmailService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public void verifyToken(String token) {
+    public void verifyToken(LoginDTO loginDTO, String token) {
 
         // check if email token and user with id extracted from token exist
         EmailStatusEntity emailStatusEntity = emailStatusRepository.findByEmailToken(token)
@@ -76,6 +78,12 @@ public class UserRegistrationEmailService {
         UserEntity userEntity = userDetailsRepository.findByUserId(emailStatusEntity.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(UserNotFoundException.USER_NOT_FOUND));
 
+        if (!userEntity.getUsername().equals(loginDTO.getUsername())
+                && !userEntity.getPassword().equals(loginDTO.getPassword())) {
+            throw new TokenNotAssociatedWithAccountException(
+                    TokenNotAssociatedWithAccountException.TOKEN_NOT_ASSOCIATED_WITH_ACCOUNT
+            );
+        }
         // if exists, delete token and activate account
         emailStatusRepository.delete(emailStatusEntity);
 
