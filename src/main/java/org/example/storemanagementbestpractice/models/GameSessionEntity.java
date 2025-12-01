@@ -25,20 +25,22 @@ public class GameSessionEntity {
     private String sessionName;
 
     @Column(nullable = false)
-    @Length(min = 5, max = 255, message = "game status length must be between 5 and 255 characters")
     private String gameStatus;
 
     @Column(nullable = false)
-    @Length(min = 5, max = 255, message = "game type length must be between 5 and 255 characters")
     private String gameType;
+
+    @Column(nullable = false)
+    private byte[] gameState;
 
     @Column(nullable = false)
     private UUID userId;
 
-    public GameSessionEntity(String sessionName, String gameStatus, String gameType, UUID userId) {
+    public GameSessionEntity(String sessionName, String gameStatus, String gameType, byte[] gameState, UUID userId) {
         this.sessionName = sessionName;
         this.gameStatus = gameStatus;
         this.gameType = gameType;
+        this.gameState = gameState;
         this.userId = userId;
     }
 }

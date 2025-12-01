@@ -24,11 +24,8 @@ CREATE TABLE IF NOT EXISTS gameSession (
     sessionName VARCHAR(255) NOT NULL,
     gameStatus VARCHAR(255) NOT NULL,
     gameType VARCHAR(255) NOT NULL,
+    gameState BYTEA NOT NULL,
     userId UUID NOT NULL,
     CONSTRAINT userIdFk FOREIGN KEY(userId) REFERENCES studyAppUser(Id) ON DELETE CASCADE
 );
-
-INSERT INTO studyAppUser (username, email, accountEnabled, password)
-VALUES
-('testuser', 'testemail@gmail.com', true, '1222223');
 
