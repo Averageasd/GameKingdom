@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
@@ -32,6 +34,10 @@ public class GameSessionEntity {
 
     @Column(nullable = false)
     private byte[] gameState;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
 
     @Column(nullable = false)
     private UUID userId;

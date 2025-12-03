@@ -2,6 +2,7 @@ package org.example.storemanagementbestpractice.dtos;
 
 import lombok.Data;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Data
@@ -15,10 +16,19 @@ public class GameSessionHistoryDTO {
 
     private String gameType;
 
-    public GameSessionHistoryDTO(UUID id, String sessionName, String gameStatus, String gameType) {
+    private OffsetDateTime createdAt;
+
+    public GameSessionHistoryDTO(
+            UUID id,
+            String sessionName,
+            String gameStatus,
+            String gameType,
+            OffsetDateTime createdAt) {
         this.id = id;
-        this.sessionName = sessionName;;
+        this.sessionName = sessionName;
+        ;
         this.gameStatus = gameStatus;
         this.gameType = gameType;
+        this.createdAt = createdAt;
     }
 }

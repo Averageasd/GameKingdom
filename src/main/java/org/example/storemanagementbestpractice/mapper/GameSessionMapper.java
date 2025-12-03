@@ -12,7 +12,8 @@ public class GameSessionMapper {
                 gameSessionEntity.getId(),
                 gameSessionEntity.getSessionName(),
                 gameSessionEntity.getGameStatus(),
-                gameSessionEntity.getGameType()
+                gameSessionEntity.getGameType(),
+                gameSessionEntity.getCreatedAt()
         );
     }
 }

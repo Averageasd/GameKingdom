@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS gameSession (
     gameStatus VARCHAR(255) NOT NULL,
     gameType VARCHAR(255) NOT NULL,
     gameState BYTEA NOT NULL,
+    createdAt timestamptz DEFAULT CURRENT_TIMESTAMP,
     userId UUID NOT NULL,
     CONSTRAINT userIdFk FOREIGN KEY(userId) REFERENCES studyAppUser(Id) ON DELETE CASCADE
 );

@@ -80,6 +80,12 @@ public class UserService {
         }
     }
 
+    public void userExistById(UUID id) {
+        if (!userDetailsRepository.existsById(id)) {
+            throw new UserNotFoundException(UserNotFoundException.USER_NOT_FOUND);
+        }
+    }
+
     public void checkEmailExists(String email) {
         if (userDetailsRepository.findByEmail(email).isPresent()) {
             log.error("email is already associated with an existing account");

@@ -3,6 +3,7 @@ package org.example.storemanagementbestpractice.services;
 import org.example.storemanagementbestpractice.dtos.GameSessionHistoryDTO;
 import org.example.storemanagementbestpractice.dtos.GameSessionHistoryPageable;
 import org.example.storemanagementbestpractice.dtos.GameSessionSearchRequestDTO;
+import org.example.storemanagementbestpractice.mapper.GameSessionMapper;
 import org.example.storemanagementbestpractice.models.GameSessionEntity;
 import org.example.storemanagementbestpractice.repository.GameSessionRepository;
 import org.springframework.data.domain.Page;
@@ -17,9 +18,14 @@ import java.util.UUID;
 public class GameSessionService {
 
     private final GameSessionRepository gameSessionRepository;
+    private final GameSessionMapper gameSessionMapper;
 
-    public GameSessionService(GameSessionRepository gameSessionRepository) {
+    public GameSessionService(
+            GameSessionRepository gameSessionRepository,
+            GameSessionMapper gameSessionMapper
+    ) {
         this.gameSessionRepository = gameSessionRepository;
+        this.gameSessionMapper = gameSessionMapper;
     }
 
     public GameSessionHistoryPageable gameSessionHistoryDTOPageable(
@@ -35,12 +41,10 @@ public class GameSessionService {
 
         List<GameSessionHistoryDTO> gameSessionHistoryDTOList = new ArrayList<>();
         gameSessionEntities.forEach(gameSessionEntity -> {
-            gameSessionHistoryDTOList.add(new GameSessionHistoryDTO(
-                    gameSessionEntity.getId(),
-                    gameSessionEntity.getSessionName(),
-                    gameSessionEntity.getGameStatus(),
-                    gameSessionEntity.getGameType()
-            ));
+            gameSessionHistoryDTOList.add(
+                    gameSessionMapper
+                            .gameSessionEntityToGameSessionHistoryDTOMapper(gameSessionEntity)
+            );
         });
 
         return new GameSessionHistoryPageable(
