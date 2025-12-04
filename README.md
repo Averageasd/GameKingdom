@@ -28,3 +28,4 @@ table
 - [x] Refactor code. create handler for exceptions. reference only services inside controllers. 
 - [x] Implement password reset logic for authenticated users.
 - [x] Implement logic that allows authenticated users to reset email.
+- [x] Implement game history display.
