@@ -51,8 +51,8 @@ public class GameSessionService {
                 gameSessionHistoryDTOList,
                 gameSessionEntities.hasNext(),
                 gameSessionEntities.hasPrevious(),
-                gameSessionEntities.getTotalPages(),
-                gameSessionEntities.getPageable().getPageNumber()
+                gameSessionEntities.getTotalElements(),
+                gameSessionEntities.getNumber()
         );
     }
 }

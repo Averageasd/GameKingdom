@@ -9,20 +9,20 @@ public class GameSessionHistoryPageable {
     private List<GameSessionHistoryDTO> gameSessionHistoryDTOS;
     private boolean hasNext;
     private boolean hasPrevious;
-    private int allPages;
+    private long totalElements;
     private int currentPage;
 
     public GameSessionHistoryPageable(
             List<GameSessionHistoryDTO> gameSessionHistoryDTOS,
             boolean hasNext,
             boolean hasPrevious,
-            int allPages,
+            long allElements,
             int currentPage
     ) {
         this.gameSessionHistoryDTOS = gameSessionHistoryDTOS;
         this.hasNext = hasNext;
         this.hasPrevious = hasPrevious;
-        this.allPages = allPages;
+        this.totalElements = allElements;
         this.currentPage = currentPage;
     }
 }

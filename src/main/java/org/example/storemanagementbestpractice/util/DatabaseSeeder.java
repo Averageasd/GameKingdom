@@ -48,7 +48,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         Optional<UserEntity> userEntityOptional = userRepository.findByUsername("testuser");
         UserEntity userEntity1 = userEntityOptional.get();
         List<GameSessionEntity> gameSessionEntityList = new ArrayList<>();
-        for (int i = 0; i<10;i++){
+        for (int i = 0; i<30;i++){
             GameSessionEntity gameSessionEntity = new GameSessionEntity(
                     "session" + i,
                     GameStatusConstants.WIN,
