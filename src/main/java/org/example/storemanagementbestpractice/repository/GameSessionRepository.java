@@ -15,9 +15,8 @@ public interface GameSessionRepository extends JpaRepository<GameSessionEntity, 
     @Query(value = """
                  SELECT * FROM gameSession gs
                               WHERE gs.userId = :userId
-                                AND (:sessionName IS NULL OR :sessionName = '' OR gs.sessionName ILIKE CONCAT(:sessionName, '%'))
                                 AND (:gameStatus IS NULL OR :gameStatus = '' OR gs.gameStatus = :gameStatus)
                                 AND (:gameType IS NULL OR :gameType = '' OR gs.gameType = :gameType)
             """, nativeQuery = true)
-    Page<GameSessionEntity> getGameSessionsForUser(UUID userId, Pageable pageable, String sessionName, String gameStatus, String gameType);
+    Page<GameSessionEntity> getGameSessionsForUser(UUID userId, Pageable pageable, String gameStatus, String gameType);
 }

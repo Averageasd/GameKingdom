@@ -3,6 +3,7 @@ package org.example.storemanagementbestpractice.services;
 import org.example.storemanagementbestpractice.dtos.GameSessionHistoryDTO;
 import org.example.storemanagementbestpractice.dtos.GameSessionHistoryPageable;
 import org.example.storemanagementbestpractice.dtos.GameSessionSearchRequestDTO;
+import org.example.storemanagementbestpractice.dtos.NewGameRequestDTO;
 import org.example.storemanagementbestpractice.mapper.GameSessionMapper;
 import org.example.storemanagementbestpractice.models.GameSessionEntity;
 import org.example.storemanagementbestpractice.repository.GameSessionRepository;
@@ -31,13 +32,13 @@ public class GameSessionService {
     public GameSessionHistoryPageable gameSessionHistoryDTOPageable(
             UUID userId,
             GameSessionSearchRequestDTO gameSessionSearchRequestDTO) {
-        Page<GameSessionEntity> gameSessionEntities = gameSessionRepository.getGameSessionsForUser(
-                userId,
-                PageRequest.of(gameSessionSearchRequestDTO.getPage(), 10),
-                gameSessionSearchRequestDTO.getSessionName(),
-                gameSessionSearchRequestDTO.getGameStatus(),
-                gameSessionSearchRequestDTO.getGameType()
-        );
+        Page<GameSessionEntity> gameSessionEntities =
+                gameSessionRepository.getGameSessionsForUser(
+                        userId,
+                        PageRequest.of(gameSessionSearchRequestDTO.getPage(), 10),
+                        gameSessionSearchRequestDTO.getGameStatus(),
+                        gameSessionSearchRequestDTO.getGameType()
+                );
 
         List<GameSessionHistoryDTO> gameSessionHistoryDTOList = new ArrayList<>();
         gameSessionEntities.forEach(gameSessionEntity -> {
@@ -54,5 +55,18 @@ public class GameSessionService {
                 gameSessionEntities.getTotalElements(),
                 gameSessionEntities.getNumber()
         );
+    }
+
+    public UUID createNewGameSession(
+            UUID userId,
+            NewGameRequestDTO newGameRequestDTO) {
+        GameSessionEntity gameSessionEntity = new GameSessionEntity(
+                newGameRequestDTO.getGameStatus(),
+                newGameRequestDTO.getGameType(),
+                newGameRequestDTO.getGameState(),
+                userId
+        );
+        gameSessionRepository.save(gameSessionEntity);
+        return gameSessionEntity.getId();
     }
 }

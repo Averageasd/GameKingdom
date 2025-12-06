@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS studyAppEmailStatus (
 
 CREATE TABLE IF NOT EXISTS gameSession (
     Id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    sessionName VARCHAR(255) NOT NULL,
     gameStatus VARCHAR(255) NOT NULL,
     gameType VARCHAR(255) NOT NULL,
     gameState BYTEA NOT NULL,

@@ -10,8 +10,6 @@ public class GameSessionHistoryDTO {
 
     private UUID id;
 
-    private String sessionName;
-
     private String gameStatus;
 
     private String gameType;
@@ -20,13 +18,10 @@ public class GameSessionHistoryDTO {
 
     public GameSessionHistoryDTO(
             UUID id,
-            String sessionName,
             String gameStatus,
             String gameType,
             OffsetDateTime createdAt) {
         this.id = id;
-        this.sessionName = sessionName;
-        ;
         this.gameStatus = gameStatus;
         this.gameType = gameType;
         this.createdAt = createdAt;

@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class GameSessionSearchRequestDTO {
 
-    private String sessionName;
     private String gameStatus;
     private String gameType;
     @Min(0)

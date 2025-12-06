@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameSessionMapper {
 
-    public GameSessionHistoryDTO gameSessionEntityToGameSessionHistoryDTOMapper(GameSessionEntity gameSessionEntity) {
+    public GameSessionHistoryDTO gameSessionEntityToGameSessionHistoryDTOMapper(
+            GameSessionEntity gameSessionEntity) {
         return new GameSessionHistoryDTO(
                 gameSessionEntity.getId(),
-                gameSessionEntity.getSessionName(),
                 gameSessionEntity.getGameStatus(),
                 gameSessionEntity.getGameType(),
                 gameSessionEntity.getCreatedAt()
