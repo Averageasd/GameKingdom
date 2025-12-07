@@ -1,9 +1,7 @@
 package org.example.storemanagementbestpractice.services;
 
-import org.example.storemanagementbestpractice.dtos.GameSessionHistoryDTO;
-import org.example.storemanagementbestpractice.dtos.GameSessionHistoryPageable;
-import org.example.storemanagementbestpractice.dtos.GameSessionSearchRequestDTO;
-import org.example.storemanagementbestpractice.dtos.NewGameRequestDTO;
+import org.example.storemanagementbestpractice.dtos.*;
+import org.example.storemanagementbestpractice.exceptions.GameNotExistException;
 import org.example.storemanagementbestpractice.mapper.GameSessionMapper;
 import org.example.storemanagementbestpractice.models.GameSessionEntity;
 import org.example.storemanagementbestpractice.repository.GameSessionRepository;
@@ -68,5 +66,19 @@ public class GameSessionService {
         );
         gameSessionRepository.save(gameSessionEntity);
         return gameSessionEntity.getId();
+    }
+
+    public GameplayDTO getGame(UUID userId, UUID gameId) {
+        GameSessionEntity gameSessionEntity
+                = gameSessionRepository.getGame(userId, gameId)
+                .orElseThrow(
+                        () -> new GameNotExistException(GameNotExistException.GAME_NOT_EXIST)
+                );
+        return new GameplayDTO(
+                gameSessionEntity.getId(),
+                gameSessionEntity.getGameStatus(),
+                gameSessionEntity.getGameType(),
+                gameSessionEntity.getGameState()
+        );
     }
 }

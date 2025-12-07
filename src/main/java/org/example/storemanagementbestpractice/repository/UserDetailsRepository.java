@@ -27,7 +27,7 @@ public interface UserDetailsRepository extends JpaRepository<UserEntity, UUID> {
 
     @Modifying
     @Query(value = "UPDATE studyAppUser SET email = :newEmail WHERE Id = :userId", nativeQuery = true)
-    Optional<Void> updateEmail(UUID userId, String newEmail);
+    Optional<Void>updateEmail(UUID userId, String newEmail);
 
     @Query(value = "SELECT * FROM studyAppUser sa WHERE sa.Id = :userId", nativeQuery = true)
     Optional<UserEntity> findByUserId(UUID userId);

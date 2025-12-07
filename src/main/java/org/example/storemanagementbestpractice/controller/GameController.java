@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.example.storemanagementbestpractice.dtos.GameSessionHistoryPageable;
 import org.example.storemanagementbestpractice.dtos.GameSessionSearchRequestDTO;
+import org.example.storemanagementbestpractice.dtos.GameplayDTO;
 import org.example.storemanagementbestpractice.dtos.NewGameRequestDTO;
 import org.example.storemanagementbestpractice.services.GameSessionService;
 import org.example.storemanagementbestpractice.services.UserService;
@@ -31,7 +32,7 @@ public class GameController {
         this.userService = userService;
     }
 
-    @GetMapping("auth/{userId}/gameSessions")
+    @GetMapping("auth/{userId}/game")
     public GameSessionHistoryPageable gameSessionHistoryPageable(
             @PathVariable UUID userId,
             GameSessionSearchRequestDTO gameSessionSearchRequestDTO
@@ -43,7 +44,7 @@ public class GameController {
         );
     }
 
-    @PostMapping(value = "auth/{userId}/newGame", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "auth/{userId}/game", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public UUID addNewGame(
             @PathVariable UUID userId,
             @RequestParam String gameType,
@@ -57,5 +58,14 @@ public class GameController {
         newGameRequestDTO.setGameStatus(gameStatus);
         newGameRequestDTO.setGameState(originalGameState);
         return gameSessionService.createNewGameSession(userId, newGameRequestDTO);
+    }
+
+    @GetMapping(value = "auth/{userId}/game/{gameId}")
+    public GameplayDTO getGame(
+            @PathVariable UUID userId,
+            @PathVariable UUID gameId
+    ) {
+        userService.userExistById(userId);
+        return gameSessionService.getGame(userId, gameId);
     }
 }

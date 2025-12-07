@@ -69,7 +69,8 @@ public class UserService {
     }
 
     public void updateUserEmail(UUID id, String newEmail) {
-        userDetailsRepository.updateEmail(id, newEmail).orElseThrow(
+        userDetailsRepository.updateEmail(id, newEmail)
+                .orElseThrow(
                 () -> new UserNotFoundException(UserNotFoundException.USER_NOT_FOUND));
     }
 
