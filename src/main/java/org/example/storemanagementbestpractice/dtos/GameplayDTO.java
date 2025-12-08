@@ -13,16 +13,13 @@ public class GameplayDTO {
 
     private String gameType;
 
-    private byte[] gameState;
 
     public GameplayDTO(
             UUID id,
             String gameStatus,
-            String gameType,
-            byte[] gameState) {
+            String gameType) {
         this.id = id;
         this.gameStatus = gameStatus;
         this.gameType = gameType;
-        this.gameState = gameState;
     }
 }

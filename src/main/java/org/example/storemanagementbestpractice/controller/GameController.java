@@ -9,7 +9,7 @@ import org.example.storemanagementbestpractice.dtos.NewGameRequestDTO;
 import org.example.storemanagementbestpractice.services.GameSessionService;
 import org.example.storemanagementbestpractice.services.UserService;
 import org.springframework.http.MediaType;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -67,5 +67,17 @@ public class GameController {
     ) {
         userService.userExistById(userId);
         return gameSessionService.getGame(userId, gameId);
+    }
+
+    @GetMapping(value = "auth/{userId}/game/gameState/{gameId}")
+    public ResponseEntity<byte[]> getGameStateAsBinary(
+            @PathVariable UUID userId,
+            @PathVariable UUID gameId) {
+        userService.userExistById(userId);
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(gameSessionService.getGameStateAsBinaryData(userId, gameId));
     }
 }

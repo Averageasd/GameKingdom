@@ -24,7 +24,14 @@ public interface GameSessionRepository extends JpaRepository<GameSessionEntity, 
     @Query(value = """
                  SELECT * FROM gameSession gs
                               WHERE gs.userId = :userId
-                              AND gs.id =: gameId
+                              AND gs.id = :gameId
             """, nativeQuery = true)
     Optional<GameSessionEntity> getGame(UUID userId, UUID gameId);
+
+    @Query(value = """
+                 SELECT gs.gameState FROM gameSession gs
+                              WHERE gs.userId = :userId
+                              AND gs.id = :gameId
+            """, nativeQuery = true)
+    Optional<byte[]> getGameStateAsBinaryData(UUID userId, UUID gameId);
 }

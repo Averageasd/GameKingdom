@@ -77,8 +77,14 @@ public class GameSessionService {
         return new GameplayDTO(
                 gameSessionEntity.getId(),
                 gameSessionEntity.getGameStatus(),
-                gameSessionEntity.getGameType(),
-                gameSessionEntity.getGameState()
+                gameSessionEntity.getGameType()
+        );
+    }
+
+    public byte[] getGameStateAsBinaryData(UUID userId, UUID gameId) {
+        return gameSessionRepository.getGameStateAsBinaryData(userId, gameId)
+        .orElseThrow(
+                () -> new GameNotExistException(GameNotExistException.GAME_NOT_EXIST)
         );
     }
 }
