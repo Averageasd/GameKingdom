@@ -69,6 +69,22 @@ public class GameController {
         return gameSessionService.getGame(userId, gameId);
     }
 
+    @PatchMapping(value = "auth/{userId}/game/{gameId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateGameState(
+            @PathVariable UUID userId,
+            @PathVariable UUID gameId,
+            @RequestParam String gameType,
+            @RequestParam String gameStatus,
+            @RequestPart("gameState") MultipartFile stateBlob
+    ) throws IOException {
+        userService.userExistById(userId);
+        byte[] originalGameState = stateBlob.getBytes();
+        gameSessionService.updateGameState(userId, gameId, gameType, gameStatus, originalGameState);
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
     @GetMapping(value = "auth/{userId}/game/gameState/{gameId}")
     public ResponseEntity<byte[]> getGameStateAsBinary(
             @PathVariable UUID userId,

@@ -1,5 +1,6 @@
 package org.example.storemanagementbestpractice.services;
 
+import jakarta.transaction.Transactional;
 import org.example.storemanagementbestpractice.dtos.*;
 import org.example.storemanagementbestpractice.exceptions.GameNotExistException;
 import org.example.storemanagementbestpractice.mapper.GameSessionMapper;
@@ -7,6 +8,7 @@ import org.example.storemanagementbestpractice.models.GameSessionEntity;
 import org.example.storemanagementbestpractice.repository.GameSessionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -86,5 +88,14 @@ public class GameSessionService {
         .orElseThrow(
                 () -> new GameNotExistException(GameNotExistException.GAME_NOT_EXIST)
         );
+    }
+
+    @Transactional
+    public void updateGameState(UUID userId, UUID gameId, String gameType, String gameStatus, byte[] gameState) {
+       gameSessionRepository.getGame(userId, gameId)
+                .orElseThrow(
+                        () -> new GameNotExistException(GameNotExistException.GAME_NOT_EXIST)
+                );
+        gameSessionRepository.updateGameState(userId, gameId, gameType, gameStatus, gameState);
     }
 }
