@@ -1,8 +1,6 @@
 package org.example.storemanagementbestpractice.util;
 
 import org.example.storemanagementbestpractice.models.GameSessionEntity;
-import org.example.storemanagementbestpractice.models.GameStatusConstants;
-import org.example.storemanagementbestpractice.models.GameTypeConstants;
 import org.example.storemanagementbestpractice.models.UserEntity;
 import org.example.storemanagementbestpractice.repository.GameSessionRepository;
 import org.example.storemanagementbestpractice.repository.UserDetailsRepository;
