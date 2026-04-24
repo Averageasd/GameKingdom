@@ -1,4 +1,4 @@
-# Study App
+# GameKingdom App
 
 ## About
 Java spring boot backend for a game application where user can choose which game to play
